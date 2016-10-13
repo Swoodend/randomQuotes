@@ -18,7 +18,7 @@ const backgroundMap = {
 function setBackground(){
     let rand = random(last);
     last = rand;
-    $('body').css('background-color', backgroundMap[rand]);
+    $('.flex-container').css('background-color', backgroundMap[rand]);
 }
 
 function random(last){

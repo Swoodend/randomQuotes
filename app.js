@@ -14,7 +14,7 @@ const request = require("request");
 const path = require("path");
 const app = express();
 
-app.set("view engine", "jade");
+app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname)));
 // var movieRequest = {
 //   url: "https://andruxnet-random-famous-quotes.p.mashape.com/?cat=movies",
