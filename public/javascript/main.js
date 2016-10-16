@@ -11,38 +11,36 @@ $(document).ready(function(){
 
   $('#movie-quote').click(function(){
     $.ajax({
-      url: movieUrl,
-      headers: {
-       "X-Mashape-Key": 'qtmx9JW3eZmshXVDmrUgCxrwMAmnp1JJCGmjsnwdDJBSsgeCbp',
-       "Content-Type": "application/x-www-form-urlencoded",
-       "Accept": "application/json"        
+      url: '/',
+      method: "POST",
+      data: {
+        quoteType: "movie"
       },
       success: function(data){
-        let quoteObj = jQuery.parseJSON(data);
-        $(".quote-area").html(quoteObj.quote);
-        $(".author-area").html(quoteObj.author);
+        $(".quote-area").html(data.quote);
+        $(".author-area").html(data.author);
+      },
+      error: function(err){
+        console.log(err);
       }
     });
   });
 
-    $('#famous-quote').click(function(){
+  $('#famous-quote').click(function(){
     $.ajax({
-      url: famousUrl,
-      headers: {
-       "X-Mashape-Key": 'qtmx9JW3eZmshXVDmrUgCxrwMAmnp1JJCGmjsnwdDJBSsgeCbp',
-       "Content-Type": "application/x-www-form-urlencoded",
-       "Accept": "application/json"        
-      },
+      url: "/",
+      method: "POST",
+      data: {quoteType: "famous"},
       success: function(data){
-        let quoteObj = jQuery.parseJSON(data);
-        $(".quote-area").html(quoteObj.quote);
-        $(".author-area").html(quoteObj.author);
+        $(".quote-area").html(data.quote);
+        $(".author-area").html(data.author);
+      },
+      error: function(err){
+        console.log(err);
       }
     });
   });
-
-  $()
-});
+}); 
 
 const backgroundMap = {
   1:"#FF3B3B",
