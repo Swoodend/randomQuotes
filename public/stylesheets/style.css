@@ -1,13 +1,30 @@
 @media (min-width: 700px){ /* anytime window >= 500px*/
   body {
     background-color: lightgreen;
-  }
+  }  
 }
 
 @media (max-width: 699px){ /*anytime less than 499px*/
   body {
     background-color: lightblue;
   }
+}
+
+#btn-twitter {
+  border: 1px solid black !important;
+}
+
+#movie-quote {
+  border: 1px solid yellow;
+}
+
+.btn-area-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.author-area {
+  border: 2px solid green;
 }
 
 .flex-container{
@@ -18,6 +35,3 @@
   border: 2px solid blue;
 }
 
-.author-area {
-  border: 2px solid green;
-}
