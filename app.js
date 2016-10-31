@@ -3,6 +3,7 @@
 //setup stuff
 const express = require("express");
 const request = require("request");
+const Twitter = require("twitter");
 const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
@@ -49,6 +50,23 @@ app.post('/', function(req, res){
   } else {
     request(famousRequest, cb);
   }
+});
+
+app.post('/tweet', function(req, res){
+  let quote = req.body.quoteToTweet;
+  let client = new Twitter({
+    consumer_key: process.env.CONSUMER_KEY,
+    consumer_secret: process.env.CONSUMER_SECRET,
+    access_token_key: process.env.ACCESS_TOKEN_KEY,
+    access_token_secret: process.env.ACCESS_TOKEN_SECRET
+  });
+
+  client.post("statuses/update", {status: quote}, function(error, tweet, response){
+    if (error){
+      console.log(error)
+    }
+    console.log('tweeted');
+  });
 });
 
 app.listen(1337, function(){
