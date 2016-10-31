@@ -40,6 +40,21 @@ $(document).ready(function(){
       }
     });
   });
+
+  $("#btn-twitter").click(function(){
+    let quote = $(".quote-area").html();
+    $.ajax({
+      url: '/tweet',
+      data: {quoteToTweet: quote},
+      method: "POST",
+      success: function(data){
+        console.log(data);
+      },
+      error: function(data){
+        console.log('error', data);
+      }
+    });
+  });
 }); 
 
 const backgroundMap = {
