@@ -2,6 +2,8 @@
 
 //setup stuff
 const express = require("express");
+const cookieParser = require("cookie-parser");
+const oauth = require("oauth").Ouath;
 const request = require("request");
 const Twitter = require("twitter");
 const bodyParser = require("body-parser");
@@ -10,6 +12,7 @@ const app = express();
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname)));
 
 const movieRequest = {
