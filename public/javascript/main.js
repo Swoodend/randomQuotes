@@ -5,6 +5,7 @@ let famousUrl = "https://andruxnet-random-famous-quotes.p.mashape.com/?cat=famou
 
 
 $(document).ready(function(){
+  
   $('body').click(function(){
     setBackground();
   });
@@ -44,18 +45,18 @@ $(document).ready(function(){
   $("#btn-twitter").click(function(){
     let quote = $(".quote-area").html();
     $.ajax({
-      url: '/tweet',
-      data: {quoteToTweet: quote},
+      url: "/twitter/request-token",
       method: "POST",
-      success: function(data){
-        console.log(data);
+      data: {quoteToTweet: quote},
+      success: function(url){
+        window.location.replace(url);
       },
-      error: function(data){
-        console.log('error', data);
+      error: function(err){
+        console.log(err);
       }
     });
   });
-}); 
+});
 
 const backgroundMap = {
   1:"#FF3B3B",
