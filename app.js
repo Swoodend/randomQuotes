@@ -3,17 +3,11 @@
 //setup stuff
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const oauth = require("oauth").Ouath;
 const request = require("request");
-const Twitter = require("twitter");
+const Twitter = require("node-twitter-api");
 const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
-
-app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname)));
 
 const movieRequest = {
   url: "https://andruxnet-random-famous-quotes.p.mashape.com/?cat=movies",
@@ -33,8 +27,57 @@ const famousRequest = {
   }
 };
 
+const twitter = new Twitter({
+  consumerKey: process.env.CONSUMER_KEY,
+  consumerSecret: process.env.CONSUMER_SECRET,
+  callback: "http://localhost:1337/twitter/callback"
+});
+
+let REQUESTTOKEN;
+let REQUESTSECRET;
+let ACCESSTOKEN;
+let ACCESSTOKENSECRET;
+let msg;
+
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname)));
+
+
+
 app.get('/', function(req, res){
   res.render('index');
+});
+
+app.get('/twitter/callback', function(req, res){
+  //this is your callback after the user logs in at the oauth page
+  let oauthToken = req.query.oauth_token;
+  let oauthVerifier = req.query.oauth_verifier;
+  twitter.getAccessToken(REQUESTTOKEN, REQUESTSECRET, oauthVerifier, function(err, accessToken, accessTokenSecret){
+    ACCESSTOKEN = accessToken;
+    ACCESSTOKENSECRET = accessTokenSecret;
+    return postTweet(ACCESSTOKEN, ACCESSTOKENSECRET, msg);
+  });
+  res.render('index');
+});
+
+app.post('/twitter/request-token', function(req, res){
+  msg = req.body.quoteToTweet;
+  if(!ACCESSTOKEN){
+    twitter.getRequestToken(function(err, requestToken, requestSecret){
+      if (err){
+        res.send(err);
+      }else{
+        let verificationUrl = 'https://twitter.com/oauth/authenticate?oauth_token=' + requestToken;
+        REQUESTTOKEN = requestToken;
+        REQUESTSECRET = requestSecret;
+        res.send(verificationUrl);
+      }
+    });
+  } else {
+    postTweet(ACCESSTOKEN, ACCESSTOKENSECRET, msg);
+  }
 });
 
 app.post('/', function(req, res){
@@ -55,22 +98,22 @@ app.post('/', function(req, res){
   }
 });
 
-app.post('/tweet', function(req, res){
-  let quote = req.body.quoteToTweet;
-  let client = new Twitter({
-    consumer_key: process.env.CONSUMER_KEY,
-    consumer_secret: process.env.CONSUMER_SECRET,
-    access_token_key: process.env.ACCESS_TOKEN_KEY,
-    access_token_secret: process.env.ACCESS_TOKEN_SECRET
-  });
 
-  client.post("statuses/update", {status: quote}, function(error, tweet, response){
-    if (error){
-      console.log(error)
+function postTweet(at, as, msg){
+  twitter.statuses("update", {
+      status: msg,
+    },
+    ACCESSTOKEN,
+    ACCESSTOKENSECRET,
+    function(err, data, response){
+      if(err){
+        console.log(err);
+      } else {
+        console.log('tweeted', msg);
+      }
     }
-    console.log('tweeted');
-  });
-});
+  )
+}
 
 app.listen(1337, function(){
   console.log("app listening on port 1337");
