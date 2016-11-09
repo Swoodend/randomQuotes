@@ -7,17 +7,24 @@
     <script src="../public/javascript/main.js", type="text/javascript"></script>
   </head>
   <body>
-    <div class="flex-container">
-      <div class="quote-area">
-        Hello I am a very famous quote from a very famous person.
+    <div class="maincontainer">
+      <div class="flash-container">
+        <% if (hasToken) {%>
+          <div class="success"><p>Posted to Twitter</p></div>
+        <%}%>
       </div>
-      <div class="author-area">
-        - John Pistachio
-      </div>
-      <div class="btn-area-container">
-        <div id="btn-twitter"><img src="http://www.scottish.parliament.uk/images/Logos%20and%20graphics/TwitterLogoSmall.jpg"></div>
-        <div id="movie-quote" class= "btn-area">Movie Quote</div>
-        <div id="famous-quote" class= "btn-area">Famous Quote</div>
+      <div class="container">
+        <div class="quote-area">
+          Hello I am a very famous quote from a very famous person.
+        </div>
+        <div class="author-area">
+          - John Pistachio
+        </div>
+        <div class="btn-area-container">
+          <div id="btn-twitter"><img src="http://www.scottish.parliament.uk/images/Logos%20and%20graphics/TwitterLogoSmall.jpg"></div>
+          <div id="movie-quote" class= "btn-area">Movie Quote</div>
+          <div id="famous-quote" class= "btn-area">Famous Quote</div>
+        </div>
       </div>
     </div>
   </body>
