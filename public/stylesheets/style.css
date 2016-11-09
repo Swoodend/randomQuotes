@@ -1,12 +1,12 @@
 @media (min-width: 700px){ /* anytime window >= 500px*/
   body {
-    background-color: lightgreen;
+    background-color: lightblue;
   }  
 }
 
 @media (max-width: 699px){ /*anytime less than 499px*/
   body {
-    background-color: lightblue;
+    background-color: pink;
   }
 }
 
@@ -18,20 +18,20 @@
   border: 1px solid yellow;
 }
 
-.btn-area-container{
-  display: flex;
-  flex-direction: column;
-}
-
 .author-area {
   border: 2px solid green;
 }
 
-.flex-container{
-  border: 1px solid red;
+.btn-area-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .quote-area {
   border: 2px solid blue;
 }
 
+.success {
+  background-color: lightgreen;
+
+}
