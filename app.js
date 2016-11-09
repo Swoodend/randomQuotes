@@ -1,13 +1,16 @@
 'use strict';
 
 //setup stuff
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const request = require("request");
-const Twitter = require("node-twitter-api");
-const bodyParser = require("body-parser");
-const path = require("path");
+let express = require("express");
+let cookieParser = require("cookie-parser");
+let request = require("request");
+let Twitter = require("node-twitter-api");
+let bodyParser = require("body-parser");
+let path = require("path");
+let session = require("express-session");
+
 const app = express();
+
 
 const movieRequest = {
   url: "https://andruxnet-random-famous-quotes.p.mashape.com/?cat=movies",
@@ -43,11 +46,23 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname)));
+app.use(session({ 
+  secret: 'keyboard cat', 
+  cookie: { },
+  resave: false,
+  saveUninitialized: false
+}));
 
 
+app.get('/flash/success', function(req, res){
+  req.session.hasToken = true;
+  res.redirect('/');
+});
 
 app.get('/', function(req, res){
-  res.render('index');
+  res.render('index', {
+    hasToken: req.session.hasToken
+  });
 });
 
 app.get('/twitter/callback', function(req, res){
@@ -59,12 +74,15 @@ app.get('/twitter/callback', function(req, res){
     ACCESSTOKENSECRET = accessTokenSecret;
     return postTweet(ACCESSTOKEN, ACCESSTOKENSECRET, msg);
   });
-  res.render('index');
+  
+  res.redirect("/flash/success");
 });
 
 app.post('/twitter/request-token', function(req, res){
   msg = req.body.quoteToTweet;
+  console.log('at', ACCESSTOKEN);
   if(!ACCESSTOKEN){
+    console.log('bad spot');
     twitter.getRequestToken(function(err, requestToken, requestSecret){
       if (err){
         res.send(err);
@@ -77,6 +95,7 @@ app.post('/twitter/request-token', function(req, res){
     });
   } else {
     postTweet(ACCESSTOKEN, ACCESSTOKENSECRET, msg);
+    res.send('/flash/success');
   }
 });
 
@@ -100,6 +119,7 @@ app.post('/', function(req, res){
 
 
 function postTweet(at, as, msg){
+
   twitter.statuses("update", {
       status: msg,
     },
